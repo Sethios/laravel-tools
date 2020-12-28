@@ -1,0 +1,45 @@
+{
+    "name": "sethios/laravel-tools",
+    "description": "Several tools for Laravel development",
+    "type": "utility",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dino Matijasevic",
+            "email": "dinomatijasevic@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "laravel/framework": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sethios\\Tools\\": "src/"
+        },
+        "exclude-from-classmap": ["src/Templates/"]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "exclude-from-classmap": ["src/Templates/"]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sethios\\Tools\\CommandsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "extra": {
+            "sort-packages": true
+        }
+    }
+}

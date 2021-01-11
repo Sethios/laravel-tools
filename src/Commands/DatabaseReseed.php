@@ -3,8 +3,10 @@
 namespace Sethios\Tools\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Illuminate\Support\Pluralizer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
@@ -60,70 +62,31 @@ class DatabaseReseed extends Command
      */
     public function handle()
     {
-        $are_you_sure = 'xxx';
+        $config = config('dbseeder.'.Pluralizer::singular($this->model));
 
-        switch ($this->model) {
-            case 'option':
-                $tables = ['options'];
-                $class = ['--class' => 'OptionSeeder'];
-            break;
+        $reset = $config['reset'] ?? '';
+        $tables = $config['tables'] ?? array_map('reset', DB::select('SHOW TABLES'));
+        $class = $config['class'] ? ['--class' => $config['class']] : [];
 
-            case 'user':
-                $reset = "2020_12_01_100000_create_users_table";
-                $tables = ['users'];
-                $class = ['--class' => 'UserSeeder'];
-            break;
-
-            case 'role':
-                $tables = [
-                    'roles',
-                    'permissions',
-                    'model_has_permissions',
-                    'model_has_roles',
-                    'role_has_permissions'
-                ];
-                $class = ['--class' => 'RoleSeeder'];
-            break;
-
-            case 'shift':
-                $reset = "2020_12_01_310000_create_shifts_table";
-                $tables = ['shifts'];
-                $class = ['--class' => 'ShiftSeeder'];
-            break;
-
-            case 'report':
-                $reset = "2020_12_01_320000_create_reports_table";
-                $tables = ['reports'];
-                $class = ['--class' => 'ReportSeeder'];
-            break;
-
-            case 'client':
-                $reset = "2020_12_01_330000_create_clients_table";
-                $tables = ['clients'];
-                $class = ['--class' => 'ClientSeeder'];
-            break;
-
-            case 'donation':
-                $reset = "2020_12_01_340000_create_donations_table";
-                $tables = ['donations'];
-                $class = ['--class' => 'DonationSeeder'];
-            break;
-
-            default:
-                $are_you_sure = $this->ask('Unknown model, if you continue ALL tables will be reset. Are you sure to continue? (yes|no)');
-                $tables = array_map('reset', DB::select('SHOW TABLES'));
-                $class = [];
-            break;
+        $ask = false;
+        if (!App::environment(['local', 'staging', 'development', 'dev'])) {
+            $ask = true;
+            $this->error('Application is not in development.');
         }
-
+        if (empty($config)) {
+            $ask = true;
+            $this->error('Unknown model, if you continue ALL tables will be reset.');
+        }
+        $are_you_sure = $ask ? $this->ask('Are you sure you wish to continue? (yes|no)') : 'yes';
         $are_you_sure = strtolower($are_you_sure);
 
-        if ($are_you_sure == 'yes' || $are_you_sure == 'y' || $are_you_sure == 'xxx') {
+        if ($are_you_sure == 'yes' || $are_you_sure == 'y') {
             Schema::disableForeignKeyConstraints();
-                if (isset($reset)) {
+                if ($reset) {
                     Artisan::call('migrate:refresh', ['--path' => '/database/migrations/' . $reset . '.php'], $this->output);
                 }
                 foreach ($tables as $table_name) {
+                    // Skip the migrations table
                     if ($table_name == 'migrations') {
                         continue;
                     }

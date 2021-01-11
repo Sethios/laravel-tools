@@ -6,7 +6,6 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 use Sethios\Tools\Commands\CreateMvc;
 use Sethios\Tools\Commands\DatabaseReseed;
-use Sethios\Tools\Commands\TestMigration;
 
 class CommandsServiceProvider extends ServiceProvider {
 
@@ -19,7 +18,6 @@ class CommandsServiceProvider extends ServiceProvider {
         $this->commands([
             CreateMvc::class,
             DatabaseReseed::class,
-            TestMigration::class,
         ]);
     }
 

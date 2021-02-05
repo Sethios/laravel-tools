@@ -120,9 +120,6 @@ class CreateMvc extends Command
         // Schema::enableForeignKeyConstraints();
         $debug = false;
 
-
-
-
         $this->info('Creating new scaffolding for the model');
         //Artisan::call('make:model', $this->formatName('model'), $this->output);
 
@@ -273,7 +270,7 @@ class CreateMvc extends Command
 
             // Resources
             case 'lang':
-                $this->fileRoute = "resources/lang/hr/".$this->caseConversion($this->model, '').".php";
+                $this->fileRoute = "resources/lang/en/".$this->caseConversion($this->model, '').".php";
             break;
             case 'index':
                 $this->fileRoute = "resources/views/".$this->caseConversion($this->model, 'camel')."/index.blade.php";

@@ -236,9 +236,9 @@ class ¤ModelP¤Controller extends Controller
                 'id' => $record[0],
                 //
             ];
-            $¤modelC = $¤modelC¤Model->updateOrCreate(['id' => $record[0]], $record_array);
+            $¤modelC¤ = $¤modelC¤Model->updateOrCreate(['id' => $record[0]], $record_array);
         }
-        return redirect()->route('¤modelC.index')->with('status', trans('¤_model¤.controller.imported'));
+        return redirect()->route('¤modelC¤.index')->with('status', trans('¤_model¤.controller.imported'));
     }
 
     /**
@@ -248,7 +248,7 @@ class ¤ModelP¤Controller extends Controller
      */
     public function download(¤ModelP¤ $¤modelC¤Model, ¤ModelP¤Request $¤modelC¤Request)
     {
-        $¤modelsC = $¤modelC¤Model->get¤ModelP¤sByUsers($¤modelC¤Request->get('id'));
+        $¤modelsC¤ = $¤modelC¤Model->get¤ModelP¤sByUsers($¤modelC¤Request->get('id'));
 
         $encoder = (new CharsetConverter())
             ->inputEncoding('UTF-8')
@@ -263,9 +263,9 @@ class ¤ModelP¤Controller extends Controller
         ]);
 
         $csv_array = [];
-        foreach ($¤modelsC as $¤modelC) {
+        foreach ($¤modelsC¤ as $¤modelC¤) {
             $csv_array[] = [
-                $¤modelC->id,
+                $¤modelC¤->id,
                 //
             ];
         }
